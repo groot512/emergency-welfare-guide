@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f766e">
+<title>긴급복지지원제도 가이드 (2026년 기준)</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{--bg:#f6f7f8;--card:#fff;--ink:#1c2526;--sub:#4b5563;--line:#d9dee3;--pri:#0f766e;--pri-d:#0b5c56;--pri-l:#e6f4f2;--ok:#047857;--ok-l:#ecfdf5;--bad:#b91c1c;--bad-l:#fef2f2;--warn:#92400e;--warn-l:#fffbeb;--r:14px}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-padding-top:120px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard","Noto Sans KR","Malgun Gothic","맑은 고딕",sans-serif;font-size:16px;line-height:1.6;word-break:keep-all;overflow-wrap:anywhere;overflow-x:hidden}
+a{color:var(--pri-d)}
+header.top{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.top-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 14px}
+.top-row h1{font-size:17px;margin:0;line-height:1.3}
+.top-row h1 small{display:block;font-size:12px;color:var(--sub);font-weight:500}
+.call-mini{flex:none;display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 14px;border-radius:999px;background:var(--bad);color:#fff;font-weight:700;text-decoration:none;font-size:15px}
+nav.tabs{display:flex;gap:6px;overflow-x:auto;padding:0 10px 8px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs a{flex:none;display:inline-flex;align-items:center;min-height:44px;padding:0 14px;border-radius:999px;background:#eef1f3;color:var(--ink);text-decoration:none;font-size:15px;font-weight:600;white-space:nowrap}
+nav.tabs a.active{background:var(--pri);color:#fff}
+main{max-width:760px;margin:0 auto;padding:12px 12px 24px}
+section{margin:0 0 18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:12px}
+h2{font-size:20px;margin:6px 2px 10px;line-height:1.35}
+h3{font-size:17px;margin:0 0 8px}
+p{margin:0 0 10px}
+.muted{color:var(--sub);font-size:14px}
+.hero{background:linear-gradient(135deg,#0f766e,#115e59);color:#fff;border:none}
+.hero h2{color:#fff;margin:0 0 8px;font-size:22px}
+.hero p{color:#e7f5f3}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 12px}
+.pill{background:rgba(255,255,255,.16);border-radius:999px;padding:4px 10px;font-size:14px}
+.call-big{display:flex;align-items:center;justify-content:center;gap:8px;min-height:56px;border-radius:12px;background:#fff;color:var(--bad);font-weight:800;font-size:18px;text-decoration:none}
+.call-big span{font-size:14px;color:var(--sub);font-weight:600}
+label.f{display:block;font-weight:700;margin:14px 0 6px;font-size:16px}
+.hint{display:block;font-weight:400;color:var(--sub);font-size:13px}
+input[type=text],select{width:100%;min-height:48px;padding:10px 12px;font-size:17px;border:1px solid #b8c0c7;border-radius:10px;background:#fff;color:var(--ink);font-family:inherit}
+input:focus,select:focus{outline:3px solid #99d5cd;border-color:var(--pri)}
+.fmt{display:block;margin-top:4px;font-size:14px;color:var(--pri-d);min-height:20px}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.seg label{display:flex;align-items:center;justify-content:center;gap:6px;min-height:48px;border:1px solid #b8c0c7;border-radius:10px;font-weight:600;cursor:pointer;text-align:center;padding:4px 6px;font-size:15px}
+.seg input{width:20px;height:20px;accent-color:var(--pri)}
+.seg label:has(input:checked){border-color:var(--pri);background:var(--pri-l);color:var(--pri-d)}
+.btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:52px;border:none;border-radius:12px;background:var(--pri);color:#fff;font-size:17px;font-weight:800;margin-top:18px;cursor:pointer;font-family:inherit}
+.btn:active{background:var(--pri-d)}
+.btn.sec{background:#eef1f3;color:var(--ink);margin-top:8px;min-height:46px;font-size:15px}
+#result{margin-top:16px}
+.res{border-radius:12px;padding:14px;border:2px solid}
+.res.ok{background:var(--ok-l);border-color:#34d399}
+.res.warn{background:var(--warn-l);border-color:#fbbf24}
+.res.bad{background:var(--bad-l);border-color:#fca5a5}
+.res h3{font-size:18px}
+.crit{list-style:none;padding:0;margin:10px 0 0}
+.crit li{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px}
+.crit .row{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:700}
+.tag{flex:none;font-size:13px;padding:2px 10px;border-radius:999px;font-weight:800}
+.tag.ok{background:#d1fae5;color:var(--ok)}
+.tag.no{background:#fee2e2;color:var(--bad)}
+.crit .d{font-size:14px;color:var(--sub);margin-top:4px}
+.formula{font-size:14px;background:#f3f5f6;border-radius:8px;padding:8px 10px;margin-top:6px}
+/* tables -> stacked cards on mobile */
+.tbl{width:100%;border-collapse:collapse;font-size:15px}
+.tbl th,.tbl td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.tbl thead th{background:#f1f5f4;font-size:14px}
+.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+@media (max-width:600px){
+ .stack thead{display:none}
+ .stack,.stack tbody,.stack tr,.stack td{display:block;width:100%}
+ .stack tr{border:1px solid var(--line);border-radius:10px;margin-bottom:8px;padding:4px 10px;background:#fff}
+ .stack td{border:none;border-bottom:1px dashed #e5e7eb;display:flex;justify-content:space-between;gap:12px;padding:7px 0;text-align:right}
+ .stack td:last-child{border-bottom:none}
+ .stack td::before{content:attr(data-l);font-weight:700;color:var(--sub);text-align:left;flex:none;max-width:48%}
+ .stack td.h{font-weight:800;font-size:16px;justify-content:flex-start;color:var(--pri-d)}
+ .stack td.h::before{content:none}
+}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:10px}
+.scroll .tbl{min-width:420px}
+.scroll-hint{font-size:13px;color:var(--sub);margin:4px 0 6px}
+.chart-box{position:relative;height:240px;width:100%}
+details{background:#fff;border:1px solid var(--line);border-radius:12px;margin-bottom:10px}
+summary{list-style:none;cursor:pointer;min-height:48px;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 14px;font-weight:800}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"＋";color:var(--pri);font-size:20px;flex:none}
+details[open] summary::after{content:"－"}
+details .in{padding:0 14px 12px}
+.clist{list-style:none;padding:0;margin:0}
+.clist li{padding:10px 0;border-top:1px solid #eef0f2}
+.clist li:first-child{border-top:none}
+.badge{display:inline-block;font-size:12px;font-weight:800;padding:1px 8px;border-radius:999px;background:#e0f2fe;color:#075985;margin-right:4px;vertical-align:1px}
+.badge.law{background:#ede9fe;color:#5b21b6}
+.badge.notice{background:#fef3c7;color:#92400e}
+.badge.ord{background:#dcfce7;color:#166534}
+.search{position:relative;margin-bottom:10px}
+.search input{padding-left:40px}
+.search::before{content:"🔍";position:absolute;left:12px;top:12px}
+.grid2{display:grid;grid-template-columns:1fr;gap:10px}
+@media (min-width:560px){.grid2{grid-template-columns:1fr 1fr}}
+.benefit{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff}
+.benefit h4{margin:0 0 4px;font-size:16px}
+.benefit .amt{font-weight:800;color:var(--pri-d)}
+.benefit .meta{font-size:14px;color:var(--sub)}
+ol.steps{list-style:none;padding:0;margin:0;counter-reset:s}
+ol.steps li{position:relative;padding:10px 0 10px 44px;border-top:1px solid #eef0f2}
+ol.steps li:first-child{border-top:none}
+ol.steps li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:10px;width:32px;height:32px;border-radius:50%;background:var(--pri);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center}
+.note{background:var(--warn-l);border:1px solid #fde68a;border-radius:10px;padding:10px 12px;font-size:14px;color:#78350f}
+footer{background:#fff;border-top:1px solid var(--line);padding:18px 14px 90px;font-size:14px;color:var(--sub)}
+footer .w{max-width:760px;margin:0 auto}
+footer ul{padding-left:18px;margin:6px 0 12px}
+footer li{margin-bottom:6px}
+.fab{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:30;display:flex;align-items:center;justify-content:center;min-height:56px;padding:0 20px;border-radius:999px;background:var(--bad);color:#fff;font-weight:800;font-size:17px;text-decoration:none;box-shadow:0 6px 16px rgba(185,28,28,.35)}
+.empty{display:none;color:var(--sub);font-size:14px;padding:6px 2px}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-row">
+    <h1>긴급복지지원 가이드<small>2026년 기준 · 보건복지부 지침 반영</small></h1>
+    <a class="call-mini" href="tel:129" aria-label="보건복지상담센터 129 전화걸기">📞 129</a>
+  </div>
+  <nav class="tabs" id="tabs" aria-label="섹션 이동">
+    <a href="#intro">개요</a>
+    <a href="#calc">자격 진단</a>
+    <a href="#crisis">위기사유</a>
+    <a href="#criteria">소득·재산 기준</a>
+    <a href="#benefits">지원 내용</a>
+    <a href="#process">절차</a>
+    <a href="#compare">기초생활 비교</a>
+    <a href="#sources">출처</a>
+  </nav>
+</header>
+
+<main>
+<section id="intro">
+  <div class="card hero">
+    <h2>갑작스러운 위기, 먼저 지원받고 나중에 조사해요</h2>
+    <p>주소득자의 실직·사망·질병, 화재 등 갑작스러운 위기로 생계가 어려워진 저소득 가구에 생계·의료·주거 등을 <b>일시적으로 신속하게</b> 지원하는 제도입니다.</p>
+    <div class="pills"><span class="pill">선지원 후 사후조사</span><span class="pill">부양의무자 기준 없음</span><span class="pill">긴급상담 24시간</span></div>
+    <a class="call-big" href="tel:129">📞 129 전화하기 <span>보건복지상담센터 (무료)</span></a>
+  </div>
+</section>
+
+<section id="calc">
+  <h2>🧮 자격 모의 진단</h2>
+  <div class="card">
+    <p class="muted">입력값으로 대략적인 선정 가능성만 확인합니다. 실제 선정은 지자체 사후조사·심사로 결정됩니다.</p>
+    <form id="diag" onsubmit="return false" novalidate>
+      <label class="f" for="hh">1. 가구원 수</label>
+      <select id="hh"></select>
+
+      <label class="f" for="region">2. 거주 지역</label>
+      <select id="region">
+        <option value="big">대도시 (특별시·광역시의 구 등)</option>
+        <option value="medium" selected>중소도시 (도의 시 등)</option>
+        <option value="rural">농어촌 (도의 군)</option>
+      </select>
+      <span class="hint">지역 구분은 신청 시 담당 공무원이 확인합니다.</span>
+
+      <label class="f" for="income">3. 월 가구 소득 (원)<span class="hint">가구원 전원의 근로·사업·재산·이전소득 합계</span></label>
+      <input type="text" inputmode="numeric" id="income" class="money" placeholder="예: 3,000,000" autocomplete="off">
+      <span class="fmt" data-for="income"></span>
+
+      <label class="f" for="gen">4. 일반재산 합계 (원)<span class="hint">주택·토지·건물·임차보증금·자동차 등 (공제·부채 차감 전)</span></label>
+      <input type="text" inputmode="numeric" id="gen" class="money" placeholder="예: 150,000,000" autocomplete="off">
+      <span class="fmt" data-for="gen"></span>
+
+      <label class="f" for="house">5. 그중 거주 중인 주거용재산 가액 (원)<span class="hint">실제 사는 집(자가 또는 임차보증금) 금액. 없으면 0</span></label>
+      <input type="text" inputmode="numeric" id="house" class="money" placeholder="예: 100,000,000" autocomplete="off">
+      <span class="fmt" data-for="house"></span>
+
+      <label class="f" for="fin">6. 금융재산 합계 (원)<span class="hint">예금·적금·주식·보험 해약환급금·현금 등</span></label>
+      <input type="text" inputmode="numeric" id="fin" class="money" placeholder="예: 5,000,000" autocomplete="off">
+      <span class="fmt" data-for="fin"></span>
+
+      <label class="f" for="debt">7. 부채 (원)<span class="hint">금융기관 대출 등 공적으로 확인되는 부채</span></label>
+      <input type="text" inputmode="numeric" id="debt" class="money" placeholder="예: 0" autocomplete="off">
+      <span class="fmt" data-for="debt"></span>
+
+      <span class="f" id="lbl-housing">8. 주거지원을 신청하나요?</span>
+      <div class="seg" role="radiogroup" aria-labelledby="lbl-housing">
+        <label><input type="radio" name="housing" value="no" checked> 아니오</label>
+        <label><input type="radio" name="housing" value="yes"> 예 (금융재산 +200만)</label>
+      </div>
+
+      <span class="f" id="lbl-crisis">9. 위기사유가 있나요?</span>
+      <div class="seg" role="radiogroup" aria-labelledby="lbl-crisis">
+        <label><input type="radio" name="crisis" value="yes" checked> 예</label>
+        <label><input type="radio" name="crisis" value="no"> 아니오</label>
+      </div>
+      <span class="hint"><a href="#crisis">위기사유 목록 보기</a></span>
+
+      <button type="button" class="btn" id="runBtn">진단 결과 보기</button>
+      <button type="button" class="btn sec" id="resetBtn">입력 초기화</button>
+    </form>
+    <div id="result" aria-live="polite"></div>
+  </div>
+</section>
+
+<section id="crisis">
+  <h2>🚨 위기사유</h2>
+  <div class="card">
+    <p class="muted">아래 위기사유 중 하나가 있어야 신청할 수 있습니다. 키워드로 찾아보세요.</p>
+    <div class="search"><input type="text" id="crisisSearch" placeholder="예: 실직, 이혼, 단전, 전세" aria-label="위기사유 검색"></div>
+    <p class="empty" id="crisisEmpty">검색 결과가 없습니다. 129에 문의해 보세요.</p>
+
+    <details open class="cgrp">
+      <summary>법정 위기사유 (긴급복지지원법 제2조)</summary>
+      <div class="in"><ul class="clist">
+        <li data-k="사망 가출 행방불명 구금 소득상실"><span class="badge law">법</span>주소득자가 사망, 가출, 행방불명, 구금시설 수용 등으로 소득을 상실한 경우</li>
+        <li data-k="질병 부상 병원 치료"><span class="badge law">법</span>중한 질병 또는 부상을 당한 경우</li>
+        <li data-k="방임 유기 학대"><span class="badge law">법</span>가구구성원으로부터 방임·유기되거나 학대 등을 당한 경우</li>
+        <li data-k="가정폭력 성폭력"><span class="badge law">법</span>가정폭력을 당해 가구구성원과 원만한 가정생활이 곤란하거나, 가구구성원으로부터 성폭력을 당한 경우</li>
+        <li data-k="화재 자연재해 재난 홍수 주택"><span class="badge law">법</span>화재 또는 자연재해 등으로 거주하는 주택·건물에서 생활하기 곤란한 경우</li>
+        <li data-k="휴업 폐업 자영업 사업장 화재"><span class="badge law">법</span>주소득자 또는 부소득자의 휴업, 폐업 또는 사업장 화재 등으로 실질적인 영업이 곤란한 경우</li>
+        <li data-k="실직 해고 일자리 소득상실"><span class="badge law">법</span>주소득자 또는 부소득자의 실직으로 소득을 상실한 경우</li>
+      </ul></div>
+    </details>
+
+    <details class="cgrp">
+      <summary>보건복지부 장관 고시 사유</summary>
+      <div class="in"><ul class="clist">
+        <li data-k="이혼 소득감소"><span class="badge notice">고시</span>이혼으로 소득이 현저히 감소한 경우</li>
+        <li data-k="단전 전기 전류제한기"><span class="badge notice">고시</span><b>단전</b>: 소득 상실·감소로 전기요금이 체납되어 공급이 중단되거나 중단 예고를 받은 경우 (전류 제한기 부설 포함)</li>
+        <li data-k="출소 교정시설 구금"><span class="badge notice">고시</span>교정시설에서 출소한 사람이 생계가 곤란한 경우 (구금기간 6개월 이상 등 요건 충족 시)</li>
+        <li data-k="노숙 노숙인 방임 유기"><span class="badge notice">고시</span>가족의 방임·유기 또는 생계 곤란 등으로 노숙하게 된 경우 (노숙인 시설 등의 추천)</li>
+        <li data-k="복지사각지대 통합사례관리 추천"><span class="badge notice">고시</span>복지사각지대 발굴대상자·통합사례관리 대상자로서 관련 부서(기관)로부터 생계가 어렵다고 추천받은 경우</li>
+        <li data-k="자살 고위험군 유족 자살시도"><span class="badge notice">고시</span>자살고위험군(자살 유족, 자살 시도자와 그 가족 등)으로서 관련 기관으로부터 생계가 어렵다고 추천받은 경우</li>
+        <li data-k="범죄 피해 이사 거주지 이전"><span class="badge notice">고시</span>타인의 범죄로 피해자가 거주하는 주택·건물에서 생활하기 곤란하여 거주지를 이전하는 경우</li>
+      </ul></div>
+    </details>
+
+    <details class="cgrp">
+      <summary>지자체 조례 사유 (보건복지부령 기준)</summary>
+      <div class="in"><ul class="clist">
+        <li data-k="간호 간병 양육 소득활동"><span class="badge ord">조례</span>가구원의 간호·간병·양육 등으로 소득활동이 미미한 경우</li>
+        <li data-k="기초생활 수급 중지 미결정"><span class="badge ord">조례</span>기초생활보장 수급이 중지되거나 결정이 나지 않은 경우</li>
+        <li data-k="수도 가스 중단 공과금"><span class="badge ord">조례</span>수도·가스 공급이 중단된 경우</li>
+        <li data-k="체납 보험료 임차료 월세 사회보험료 공과금"><span class="badge ord">조례</span>사회보험료·주택임차료 등이 장기 체납된 경우</li>
+      </ul>
+      <p class="muted" style="margin-top:6px">인정 범위는 시·군·구 조례마다 다릅니다. 거주지 행정복지센터에 확인하세요.</p></div>
+    </details>
+
+    <details class="cgrp">
+      <summary>다른 특별법에 따른 사유</summary>
+      <div class="in"><ul class="clist">
+        <li data-k="전세사기 전세 보증금 특별법"><span class="badge">특별법</span><b>전세사기피해자</b>: 「전세사기피해자 지원 및 주거안정에 관한 특별법」 제28조를 적용받는 경우</li>
+        <li data-k="이태원 참사 특별법"><span class="badge">특별법</span>「10.29 이태원참사 특별법」 제62조를 적용받는 경우</li>
+        <li data-k="여객기 참사 특별법 항공"><span class="badge">특별법</span>「12·29 여객기참사 특별법」 제17조를 적용받는 경우</li>
+        <li data-k="산불 경북 경남 울산 특별법"><span class="badge">특별법</span>「경북·경남·울산 초대형산불 특별법」 제19조를 적용받는 경우</li>
+      </ul></div>
+    </details>
+  </div>
+</section>
+
+<section id="criteria">
+  <h2>📊 소득·재산 기준 (2026년)</h2>
+  <div class="card">
+    <p>위기사유와 함께 <b>소득·재산·금융재산</b> 기준을 모두 충족해야 합니다. 기준 충족 여부는 지원 후 사후조사·적정성 심사에서 판단합니다.</p>
+    <h3>월 소득 기준 (기준중위소득 75% 이하)</h3>
+    <div class="chart-box"><canvas id="incomeChart" aria-label="가구원수별 소득기준 차트" role="img"></canvas></div>
+  </div>
+
+  <div class="card">
+    <h3>가구원수별 기준표</h3>
+    <table class="tbl stack">
+      <thead><tr><th>가구원</th><th class="num">소득 (75%)</th><th class="num">금융재산</th><th class="num">금융재산 (주거지원)</th></tr></thead>
+      <tbody id="critBody"></tbody>
+    </table>
+    <p class="muted" style="margin-top:8px">7인 이상: 소득 1인당 +719,399원, 금융재산 1인당 +960,000원. 금융재산 기준은 생활준비금에 600만원을 더한 금액입니다.</p>
+  </div>
+
+  <div class="card">
+    <h3>재산 기준 (지역별)</h3>
+    <div class="formula"><b>재산 합계</b> = 일반재산 − 주거용재산 공제 + 금융재산 − 부채</div>
+    <p class="muted" style="margin-top:6px">주거용재산 공제는 실제 사는 집 가액 범위 안에서 지역별 한도까지만 빼줍니다.</p>
+    <div class="chart-box"><canvas id="propChart" aria-label="지역별 재산기준 차트" role="img"></canvas></div>
+    <table class="tbl stack" style="margin-top:10px">
+      <thead><tr><th>지역</th><th class="num">재산 기준</th><th class="num">주거용재산 공제 한도</th></tr></thead>
+      <tbody>
+        <tr><td class="h" data-l="지역">대도시</td><td class="num" data-l="재산 기준">2억 4,100만원</td><td class="num" data-l="주거용재산 공제">6,900만원</td></tr>
+        <tr><td class="h" data-l="지역">중소도시</td><td class="num" data-l="재산 기준">1억 5,200만원</td><td class="num" data-l="주거용재산 공제">4,200만원</td></tr>
+        <tr><td class="h" data-l="지역">농어촌</td><td class="num" data-l="재산 기준">1억 3,000만원</td><td class="num" data-l="주거용재산 공제">3,500만원</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="benefits">
+  <h2>🎁 지원 내용</h2>
+  <div class="card">
+    <h3>주지원 (위기상황 주지원)</h3>
+    <div class="grid2">
+      <div class="benefit"><h4>🍚 생계지원</h4><div class="amt">1인 783,000원 · 4인 1,994,600원 /월</div><div class="meta">식료품비·의복비·냉방비 등 · 최대 6회</div></div>
+      <div class="benefit"><h4>🏥 의료지원</h4><div class="amt">회당 300만원 이내</div><div class="meta">검사·치료 등 의료서비스 · 최대 2회 · 간병비, 의료기구 구입비, 비급여 도수치료·입원비·식대 등 제외</div></div>
+      <div class="benefit"><h4>🏠 주거지원</h4><div class="amt">대도시 4인 662,500원 /월 이내</div><div class="meta">임시거소 제공, 지원상한액 내 실비 · 최대 12회(12개월)</div></div>
+      <div class="benefit"><h4>🏢 사회복지시설 이용</h4><div class="amt">1인 552,000원 · 4인 1,494,100원 /월 이내</div><div class="meta">시설 입소·이용 비용, 지원상한액 내 실비 · 최대 6회</div></div>
+    </div>
+  </div>
+
+  <details>
+    <summary>생계지원 가구원수별 금액</summary>
+    <div class="in">
+      <table class="tbl stack"><thead><tr><th>가구원</th><th class="num">월 지원액</th></tr></thead><tbody id="livingBody"></tbody></table>
+      <p class="muted" style="margin-top:6px">7인 이상 추가액은 출처마다 달라 표시하지 않았습니다. 129에 확인하세요.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>주거지원 지역·가구원수별 상한액</summary>
+    <div class="in">
+      <p class="scroll-hint">← 표를 좌우로 밀어 보세요 →</p>
+      <div class="scroll"><table class="tbl">
+        <thead><tr><th>지역</th><th class="num">1~2인</th><th class="num">3~4인</th><th class="num">5~6인</th></tr></thead>
+        <tbody>
+          <tr><th>대도시</th><td class="num">398,900</td><td class="num">662,500</td><td class="num">874,100</td></tr>
+          <tr><th>중소도시</th><td class="num">299,100</td><td class="num">435,600</td><td class="num">574,200</td></tr>
+          <tr><th>농어촌</th><td class="num">189,000</td><td class="num">250,500</td><td class="num">330,000</td></tr>
+        </tbody>
+      </table></div>
+      <p class="muted" style="margin-top:6px">단위: 원/월. 7인 이상은 1인당 대도시 105,800원, 중소도시 69,300원, 농어촌 39,800원 추가.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>사회복지시설 이용 인원별 상한액</summary>
+    <div class="in">
+      <table class="tbl stack"><thead><tr><th>입소자 수</th><th class="num">월 지원액</th></tr></thead><tbody id="facBody"></tbody></table>
+    </div>
+  </details>
+
+  <div class="card">
+    <h3>부가지원</h3>
+    <div class="grid2">
+      <div class="benefit"><h4>🎓 교육지원</h4><div class="amt">분기당 초 127,900원 · 중 180,000원 · 고 214,000원</div><div class="meta">학용품비 등과 수업료·입학금 · 2회 (주거지원 대상자는 최대 4회)</div></div>
+      <div class="benefit"><h4>🔥 연료비</h4><div class="amt">월 150,000원</div><div class="meta">동절기(10~3월)만 · 최대 6회</div></div>
+      <div class="benefit"><h4>👶 해산비</h4><div class="amt">700,000원</div><div class="meta">1회</div></div>
+      <div class="benefit"><h4>🕯️ 장제비</h4><div class="amt">800,000원</div><div class="meta">1회</div></div>
+      <div class="benefit"><h4>⚡ 전기요금</h4><div class="amt">500,000원 이내</div><div class="meta">단전 가구의 체납 전기요금 · 1회</div></div>
+      <div class="benefit"><h4>🤝 민간 연계</h4><div class="amt">횟수 제한 없음</div><div class="meta">사회복지공동모금회, 대한적십자사 등 연계</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="process">
+  <h2>🔄 진행 절차</h2>
+  <div class="card">
+    <p><b>선지원 후 사후조사</b>: 위기 확인 후 먼저 신속하게 지원하고, 소득·재산은 나중에 조사합니다.</p>
+    <ol class="steps">
+      <li><b>지원 요청·신고</b><br><span class="muted">본인, 친족, 이웃 등 누구나 129 또는 읍·면·동 행정복지센터, 시·군·구에 요청</span></li>
+      <li><b>현장 확인</b><br><span class="muted">담당 공무원이 위기상황을 현장에서 확인</span></li>
+      <li><b>지원 결정·지급</b><br><span class="muted">긴급성이 인정되면 우선 지원</span></li>
+      <li><b>사후조사</b><br><span class="muted">소득·재산 등 공적자료로 지원 적합 여부 조사</span></li>
+      <li><b>긴급지원심의위원회 적정성 심사</b><br><span class="muted">지원 연장·종료 결정. 부적정이면 전액·일부 환수 또는 환수 면제</span></li>
+    </ol>
+    <p class="muted" style="margin-top:8px">처분에 이의가 있으면 고지받은 날부터 30일 이내에 이의신청할 수 있습니다.</p>
+  </div>
+</section>
+
+<section id="compare">
+  <h2>⚖️ 기초생활보장과 비교</h2>
+  <div class="card">
+    <table class="tbl stack">
+      <thead><tr><th>구분</th><th>긴급복지지원</th><th>기초생활보장</th></tr></thead>
+      <tbody>
+        <tr><td class="h" data-l="구분">제도 성격</td><td data-l="긴급복지">일시적·단기 긴급 지원</td><td data-l="기초생활">지속적 최저생활 보장</td></tr>
+        <tr><td class="h" data-l="구분">소득 기준</td><td data-l="긴급복지">기준중위소득 75% 이하</td><td data-l="기초생활">급여별 차등 (생계 32%: 1인 820,556원 · 4인 2,078,316원)</td></tr>
+        <tr><td class="h" data-l="구분">부양의무자 기준</td><td data-l="긴급복지">적용 안 함</td><td data-l="기초생활">의료급여에 적용, 생계급여는 고소득·고재산 부양의무자만 적용</td></tr>
+        <tr><td class="h" data-l="구분">조사·지급 순서</td><td data-l="긴급복지">선지원 후 사후조사 (신속 지원)</td><td data-l="기초생활">조사 후 지원 (신청일부터 30일 이내 결정, 최대 60일)</td></tr>
+        <tr><td class="h" data-l="구분">지원 기간</td><td data-l="긴급복지">1~6개월 (주거 최대 12개월)</td><td data-l="기초생활">자격 유지 시 계속 지원</td></tr>
+      </tbody>
+    </table>
+    <p class="note" style="margin-top:8px">긴급지원과 같은 내용의 기초생활보장 급여 등을 이미 받고 있으면 중복 지원되지 않습니다.</p>
+  </div>
+</section>
+</main>
+
+<footer id="sources">
+  <div class="w">
+    <b>출처 (확인일 2026-10-11)</b>
+    <ul>
+      <li><a href="https://www.mohw.go.kr/menu.es?mid=a10708010100" target="_blank" rel="noopener">보건복지부 · 긴급복지지원</a></li>
+      <li><a href="https://www.gov.kr/portal/rcvfvrSvc/dtlEx/135200005003" target="_blank" rel="noopener">정부24 · 긴급복지 생계지원</a></li>
+      <li><a href="https://www.gov.kr/portal/rcvfvrSvc/dtlEx/135200005004" target="_blank" rel="noopener">정부24 · 긴급복지 연료비 및 전기요금 지원</a></li>
+      <li><a href="https://housing.seoul.go.kr/site/main/content/sh01_074" target="_blank" rel="noopener">서울주거포털 · 긴급복지 주거지원 (2026년 긴급복지지원사업 안내 인용)</a></li>
+      <li><a href="https://www.easylaw.go.kr/CSP/CnpClsMainBtr.laf?ccfNo=3&amp;cciNo=1&amp;cnpClsNo=3&amp;csmSeq=90&amp;popMenu=ov" target="_blank" rel="noopener">찾기쉬운 생활법령정보 · 긴급복지지원 (주거·시설·기타 지원)</a></li>
+      <li><a href="https://www.mohw.go.kr/board.es?act=view&amp;bid=0027&amp;list_no=1487098&amp;mid=a10503010100" target="_blank" rel="noopener">보건복지부 보도자료 · 2026년 기준 중위소득</a></li>
+      <li><a href="https://www.sejong.go.kr/welfare/sub05_05_05.do" target="_blank" rel="noopener">세종특별자치시 · 긴급복지지원사업</a></li>
+    </ul>
+    <p><b>2026년 기준, 실제 지원은 지자체 심사로 결정됩니다.</b> 이 페이지의 진단 결과는 참고용이며, 정확한 상담은 보건복지상담센터 129(긴급상담 24시간) 또는 거주지 행정복지센터로 문의하세요.</p>
+  </div>
+</footer>
+
+<a class="fab" href="tel:129" aria-label="129 전화걸기">📞 129 상담</a>
+
+<script>
+(function(){
+'use strict';
+var D = {
+  income: {1:1923179,2:3149469,3:4019277,4:4871054,5:5667539,6:6416964}, incomeAdd:719399,
+  fin: {1:8564000,2:10199000,3:11359000,4:12494000,5:13556000,6:14555000}, finAdd:960000, finHousing:2000000,
+  propLimit: {big:241000000, medium:152000000, rural:130000000},
+  houseDed: {big:69000000, medium:42000000, rural:35000000},
+  living: {1:783000,2:1286600,3:1644000,4:1994600,5:2324400,6:2636700},
+  facility: {1:552000,2:941700,3:1218400,4:1494100,5:1770800,6:2047400}
+};
+var REG = {big:'대도시', medium:'중소도시', rural:'농어촌'};
+function limitFor(tbl, add, n){ return n<=6 ? tbl[n] : tbl[6] + (n-6)*add; }
+function won(n){ return Math.round(n).toLocaleString('ko-KR') + '원'; }
+function hangul(n){
+  n = Math.round(Math.abs(n)); if (n === 0) return '0원';
+  var eok = Math.floor(n/1e8), man = Math.round((n % 1e8)/1e4);
+  if (man === 10000){ eok += 1; man = 0; }
+  var s = '';
+  if (eok) s += eok.toLocaleString('ko-KR') + '억';
+  if (man) s += (s ? ' ' : '') + man.toLocaleString('ko-KR') + '만';
+  if (!s) return '1만원 미만';
+  return '약 ' + s + '원';
+}
+function fmtLive(n){ return won(n) + ' (' + hangul(n) + ')'; }
+function parseMoney(v){ var d = String(v||'').replace(/[^0-9]/g,''); return d ? parseInt(d,10) : 0; }
+function $(id){ return document.getElementById(id); }
+
+// household select
+var hh = $('hh');
+for (var i=1;i<=10;i++){ var o=document.createElement('option'); o.value=i; o.textContent=i+'인 가구'; if(i===4)o.selected=true; hh.appendChild(o); }
+
+// tables
+var cb = $('critBody'), lb = $('livingBody'), fb = $('facBody'), rows='', lrows='', frows='';
+for (var n=1;n<=6;n++){
+  rows += '<tr><td class="h" data-l="가구원">'+n+'인</td><td class="num" data-l="소득 (75%)">'+won(D.income[n])+'</td><td class="num" data-l="금융재산">'+won(D.fin[n])+'</td><td class="num" data-l="주거지원 시">'+won(D.fin[n]+D.finHousing)+'</td></tr>';
+  lrows += '<tr><td class="h" data-l="가구원">'+n+'인</td><td class="num" data-l="월 지원액">'+won(D.living[n])+'</td></tr>';
+  frows += '<tr><td class="h" data-l="입소자 수">'+n+'명</td><td class="num" data-l="월 지원액">'+won(D.facility[n])+'</td></tr>';
+}
+cb.innerHTML = rows; lb.innerHTML = lrows; fb.innerHTML = frows;
+
+// money inputs: comma formatting + live 한글
+var monies = document.querySelectorAll('input.money');
+function updFmt(inp){
+  var out = document.querySelector('.fmt[data-for="'+inp.id+'"]');
+  var raw = inp.value.replace(/[^0-9]/g,'');
+  if (!raw){ inp.value=''; out.textContent=''; return; }
+  var n = parseInt(raw,10);
+  var caret = inp.value.length - (inp.selectionStart||inp.value.length);
+  inp.value = n.toLocaleString('ko-KR');
+  try { var p = Math.max(0, inp.value.length - caret); inp.setSelectionRange(p,p); } catch(e){}
+  out.textContent = fmtLive(n);
+}
+Array.prototype.forEach.call(monies, function(inp){
+  inp.addEventListener('input', function(){ updFmt(inp); });
+});
+
+function radio(name){ var r=document.querySelector('input[name="'+name+'"]:checked'); return r ? r.value : null; }
+
+function evaluate(inp){
+  var n = inp.household, reg = inp.region;
+  var incomeLimit = limitFor(D.income, D.incomeAdd, n);
+  var finLimit = limitFor(D.fin, D.finAdd, n) + (inp.housing ? D.finHousing : 0);
+  var houseVal = Math.min(inp.house, inp.gen);
+  var ded = Math.min(houseVal, D.houseDed[reg]);
+  var propTotal = inp.gen - ded + inp.fin - inp.debt;
+  var propLimit = D.propLimit[reg];
+  var r = {
+    incomeLimit:incomeLimit, finLimit:finLimit, ded:ded, propTotal:propTotal, propLimit:propLimit,
+    incomeOk: inp.income <= incomeLimit,
+    propOk: propTotal <= propLimit,
+    finOk: inp.fin <= finLimit,
+    crisisOk: inp.crisis
+  };
+  r.status = !r.crisisOk ? 'nocrisis' : (r.incomeOk && r.propOk && r.finOk ? 'pass' : 'exceed');
+  return r;
+}
+window.__ewgEvaluate = evaluate;
+
+function tag(ok){ return ok ? '<span class="tag ok">충족</span>' : '<span class="tag no">초과</span>'; }
+
+function run(){
+  var inp = {
+    household: parseInt(hh.value,10), region: $('region').value,
+    income: parseMoney($('income').value), gen: parseMoney($('gen').value), house: parseMoney($('house').value),
+    fin: parseMoney($('fin').value), debt: parseMoney($('debt').value),
+    housing: radio('housing') === 'yes', crisis: radio('crisis') === 'yes'
+  };
+  var r = evaluate(inp), box = $('result'), head, cls;
+  if (r.status === 'pass'){
+    cls='ok'; head='<h3>✅ 선정 가능성이 높아요</h3><p>입력한 소득·재산·금융재산이 2026년 기준을 모두 충족하고 위기사유가 있습니다. 129 또는 거주지 행정복지센터에 바로 신청하세요.</p>';
+  } else if (r.status === 'exceed'){
+    cls='warn'; head='<h3>⚠️ 일부 기준을 초과했어요</h3><p>단순 계산으로는 아래 초과 항목이 있습니다. 다만 위기상황의 긴급성에 따라 <b>시·군·구 긴급지원심의위원회</b>가 지원을 결정할 수 있으니 129 또는 행정복지센터에 상담해 보세요.</p>';
+  } else {
+    cls='bad'; head='<h3>❌ 위기사유가 없으면 긴급지원 대상이 아니에요</h3><p>긴급복지지원은 위기사유가 있어야 신청할 수 있습니다. <a href="#crisis">위기사유 목록</a>을 확인하고, 해당이 없다면 기초생활보장 등 다른 제도를 129에 문의하세요.</p>';
+  }
+  var regName = REG[inp.region];
+  var html = '<div class="res '+cls+'">'+head+'<ul class="crit">'+
+    '<li><div class="row">소득 '+tag(r.incomeOk)+'</div><div class="d">'+won(inp.income)+' / 기준 '+won(r.incomeLimit)+' 이하 ('+inp.household+'인, 중위소득 75%)</div></li>'+
+    '<li><div class="row">재산 합계 ('+regName+') '+tag(r.propOk)+'</div><div class="d">'+(r.propTotal<0?'−':'')+won(Math.abs(r.propTotal))+' / 기준 '+won(r.propLimit)+' 이하</div>'+
+      '<div class="formula">일반 '+won(inp.gen)+' − 주거공제 '+won(r.ded)+' + 금융 '+won(inp.fin)+' − 부채 '+won(inp.debt)+'</div></li>'+
+    '<li><div class="row">금융재산 '+tag(r.finOk)+'</div><div class="d">'+won(inp.fin)+' / 기준 '+won(r.finLimit)+' 이하'+(inp.housing?' (주거지원 +200만 반영)':'')+'</div></li>'+
+    '<li><div class="row">위기사유 '+(r.crisisOk?'<span class="tag ok">있음</span>':'<span class="tag no">없음</span>')+'</div></li>'+
+    '</ul><p class="muted" style="margin:8px 0 0">참고용 모의 계산입니다. 실제 선정은 지자체 사후조사와 심사로 결정됩니다.</p></div>';
+  box.innerHTML = html;
+  box.setAttribute('data-status', r.status);
+  box.scrollIntoView({behavior:'smooth', block:'start'});
+}
+$('runBtn').addEventListener('click', run);
+$('resetBtn').addEventListener('click', function(){
+  $('diag').reset();
+  Array.prototype.forEach.call(monies, function(i){ i.value=''; updFmt(i); });
+  hh.value='4'; $('result').innerHTML='';
+});
+
+// crisis search
+var cs = $('crisisSearch');
+cs.addEventListener('input', function(){
+  var q = cs.value.trim().toLowerCase(), any=false;
+  document.querySelectorAll('.cgrp').forEach(function(g){
+    var hit=0;
+    g.querySelectorAll('.clist li').forEach(function(li){
+      var t=(li.textContent+' '+(li.getAttribute('data-k')||'')).toLowerCase();
+      var m = !q || t.indexOf(q) !== -1; li.style.display = m ? '' : 'none'; if(m) hit++;
+    });
+    g.style.display = hit ? '' : 'none';
+    if (q && hit) g.open = true;
+    if (hit) any=true;
+  });
+  $('crisisEmpty').style.display = any ? 'none' : 'block';
+});
+
+// active tab highlight
+var links = document.querySelectorAll('#tabs a');
+function setActive(id){
+  links.forEach(function(a){
+    var on = a.getAttribute('href') === '#'+id; a.classList.toggle('active', on);
+    if (on && a.scrollIntoView) { var nav=$('tabs'); nav.scrollLeft = a.offsetLeft - 20; }
+  });
+}
+if ('IntersectionObserver' in window){
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting) setActive(e.target.id); });
+  }, {rootMargin:'-130px 0px -60% 0px'});
+  document.querySelectorAll('main section, footer').forEach(function(s){ io.observe(s); });
+}
+setActive('intro');
+
+// charts
+function charts(){
+  if (typeof Chart === 'undefined') {
+    document.querySelectorAll('.chart-box').forEach(function(b){ b.innerHTML='<p class="muted">차트를 불러오지 못했습니다. 아래 표를 참고하세요.</p>'; b.style.height='auto'; });
+    return;
+  }
+  Chart.defaults.font.family = getComputedStyle(document.body).fontFamily;
+  Chart.defaults.font.size = 13;
+  new Chart($('incomeChart'), {
+    type:'bar',
+    data:{ labels:['1인','2인','3인','4인','5인','6인'],
+      datasets:[{ label:'월 소득 기준', data:[1,2,3,4,5,6].map(function(k){return D.income[k];}), backgroundColor:'#0f766e', borderRadius:6 }]},
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false},
+      tooltip:{callbacks:{label:function(c){ return won(c.parsed.y)+' 이하'; }}}},
+      scales:{ y:{ beginAtZero:true, ticks:{ callback:function(v){ return (v/10000).toLocaleString('ko-KR')+'만'; }}}}}
+  });
+  new Chart($('propChart'), {
+    type:'bar',
+    data:{ labels:['대도시','중소도시','농어촌'],
+      datasets:[
+        { label:'재산 기준', data:[24100,15200,13000], backgroundColor:'#c2410c', borderRadius:6 },
+        { label:'주거용재산 공제 한도', data:[6900,4200,3500], backgroundColor:'#fdba74', borderRadius:6 }
+      ]},
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{position:'bottom'}, tooltip:{callbacks:{label:function(c){ return c.dataset.label+': '+c.parsed.y.toLocaleString('ko-KR')+'만원'; }}}},
+      scales:{ y:{ beginAtZero:true, ticks:{ callback:function(v){ return v.toLocaleString('ko-KR')+'만'; }}}}}
+  });
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', charts); else charts();
+})();
+</script>
+</body>
+</html>
